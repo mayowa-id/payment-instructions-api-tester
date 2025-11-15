@@ -4,7 +4,6 @@ import { Play, Check, X, AlertCircle, Clock } from 'lucide-react';
 const API_URL = 'https://payment-instructions-api.vercel.app/payment-instructions';
 
 const testCases = [
-  // ... keep all your test cases exactly as they are
   {
     id: 1,
     name: 'Valid DEBIT Transaction',
@@ -144,7 +143,7 @@ const testCases = [
   name: 'Decimal Amount',
   category: 'invalid',
   expectedStatus: 400, 
-  expectedCode: 'AP00',  
+  expectedCode:'AM01',  
   payload: {
     accounts: [
       { id: 'a', balance: 500, currency: 'USD' },
