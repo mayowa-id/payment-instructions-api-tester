@@ -140,33 +140,34 @@ const testCases = [
     }
   },
   {
-    id: 11,
-    name: 'Decimal Amount',
-    category: 'invalid',
-    expectedStatus: 400,
-    expectedCode: 'AM01',
-    payload: {
-      accounts: [
-        { id: 'a', balance: 500, currency: 'USD' },
-        { id: 'b', balance: 200, currency: 'USD' }
-      ],
-      instruction: 'DEBIT 100.50 USD FROM ACCOUNT a FOR CREDIT TO ACCOUNT b'
-    }
-  },
-  {
-    id: 12,
-    name: 'Malformed Instruction',
-    category: 'invalid',
-    expectedStatus: 400,
-    expectedCode: 'SY01',
-    payload: {
-      accounts: [
-        { id: 'a', balance: 500, currency: 'USD' },
-        { id: 'b', balance: 200, currency: 'USD' }
-      ],
-      instruction: 'SEND 100 USD TO ACCOUNT b'
-    }
+  id: 11,
+  name: 'Decimal Amount',
+  category: 'invalid',
+  expectedStatus: 400, 
+  expectedCode: 'AP00',  
+  payload: {
+    accounts: [
+      { id: 'a', balance: 500, currency: 'USD' },
+      { id: 'b', balance: 200, currency: 'USD' }
+    ],
+    instruction: 'DEBIT 100.50 USD FROM ACCOUNT a FOR CREDIT TO ACCOUNT b'
   }
+},
+{
+  id: 12,
+  name: 'Malformed Instruction',
+  category: 'invalid',
+  expectedStatus: 400,  
+  expectedCode: 'SY03',  
+  payload: {
+    accounts: [
+      { id: 'a', balance: 500, currency: 'USD' },
+      { id: 'b', balance: 200, currency: 'USD' }
+    ],
+    instruction: 'SEND 100 USD TO ACCOUNT b'
+  }
+}
+
 ];
 
 export default function PaymentAPITester() {
@@ -334,6 +335,11 @@ export default function PaymentAPITester() {
 
 function TestCard({ test, result, onRun, disabled, getStatusIcon }) {
   const [expanded, setExpanded] = useState(false);
+  React.useEffect(() => {
+    if (result && result.status === 'complete') {
+      setExpanded(true);
+    }
+  }, [result]);
 
   return (
     <div className="test-card">
