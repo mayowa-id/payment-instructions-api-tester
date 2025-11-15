@@ -144,7 +144,7 @@ const testCases = [
   name: 'Decimal Amount',
   category: 'invalid',
   expectedStatus: 400, 
-  expectedCode: 'AP00',  
+  expectedCode: 'AM01',  
   payload: {
     accounts: [
       { id: 'a', balance: 500, currency: 'USD' },
