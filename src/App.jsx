@@ -4,6 +4,7 @@ import { Play, Check, X, AlertCircle, Clock } from 'lucide-react';
 const API_URL = 'https://payment-instructions-api.vercel.app/payment-instructions';
 
 const testCases = [
+  // ... keep all your test cases exactly as they are
   {
     id: 1,
     name: 'Valid DEBIT Transaction',
@@ -232,98 +233,96 @@ export default function PaymentAPITester() {
 
   const getStatusIcon = (result) => {
     if (!result) return null;
-    if (result.status === 'running') return <Clock className="w-4 h-4 animate-spin text-blue-500" />;
-    if (result.status === 'error') return <AlertCircle className="w-4 h-4 text-orange-500" />;
+    if (result.status === 'running') return <Clock className="icon blue spin" />;
+    if (result.status === 'error') return <AlertCircle className="icon orange" />;
     return result.passed ? 
-      <Check className="w-4 h-4 text-green-500" /> : 
-      <X className="w-4 h-4 text-red-500" />;
+      <Check className="icon green" /> : 
+      <X className="icon red" />;
   };
 
   const completedTests = Object.values(results).filter(r => r.status === 'complete').length;
   const passedTests = Object.values(results).filter(r => r.status === 'complete' && r.passed).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="bg-gradient-to-r from-slate-800 to-slate-900 p-8 text-white">
-            <h1 className="text-3xl font-bold mb-2">Payment Instructions API</h1>
-            <p className="text-slate-300">Comprehensive Test Suite</p>
+    <div className="app-container">
+      <div className="content-wrapper">
+        <div className="main-card">
+          <div className="header">
+            <h1>Payment Instructions API</h1>
+            <p>Comprehensive Test Suite</p>
             
             {completedTests > 0 && (
-              <div className="mt-6 flex items-center gap-6 text-sm">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+              <div className="stats-container">
+                <div className="stat-item">
+                  <div className="stat-dot green"></div>
                   <span>{passedTests} passed</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                <div className="stat-item">
+                  <div className="stat-dot red"></div>
                   <span>{completedTests - passedTests} failed</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
+                <div className="stat-item">
+                  <div className="stat-dot gray"></div>
                   <span>{testCases.length - completedTests} pending</span>
                 </div>
               </div>
             )}
           </div>
 
-          <div className="p-8">
-            <div className="flex gap-3 mb-8">
+          <div className="content">
+            <div className="button-group">
               <button
                 onClick={runAllTests}
                 disabled={running}
-                className="px-6 py-2.5 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-medium"
+                className="btn btn-primary"
               >
-                <Play className="w-4 h-4" />
+                <Play className="icon" />
                 Run All Tests
               </button>
               <button
                 onClick={clearResults}
                 disabled={running}
-                className="px-6 py-2.5 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                className="btn btn-secondary"
               >
                 Clear Results
               </button>
             </div>
 
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                  <div className="w-1 h-5 bg-green-500 rounded"></div>
-                  Valid Test Cases
-                </h2>
-                <div className="grid gap-3">
-                  {validTests.map(test => (
-                    <TestCard
-                      key={test.id}
-                      test={test}
-                      result={results[test.id]}
-                      onRun={() => runTest(test)}
-                      disabled={running || activeTest === test.id}
-                      getStatusIcon={getStatusIcon}
-                    />
-                  ))}
-                </div>
+            <div className="section">
+              <h2 className="section-header">
+                <div className="section-indicator green"></div>
+                Valid Test Cases
+              </h2>
+              <div className="test-grid">
+                {validTests.map(test => (
+                  <TestCard
+                    key={test.id}
+                    test={test}
+                    result={results[test.id]}
+                    onRun={() => runTest(test)}
+                    disabled={running || activeTest === test.id}
+                    getStatusIcon={getStatusIcon}
+                  />
+                ))}
               </div>
+            </div>
 
-              <div>
-                <h2 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                  <div className="w-1 h-5 bg-red-500 rounded"></div>
-                  Invalid Test Cases
-                </h2>
-                <div className="grid gap-3">
-                  {invalidTests.map(test => (
-                    <TestCard
-                      key={test.id}
-                      test={test}
-                      result={results[test.id]}
-                      onRun={() => runTest(test)}
-                      disabled={running || activeTest === test.id}
-                      getStatusIcon={getStatusIcon}
-                    />
-                  ))}
-                </div>
+            <div className="section">
+              <h2 className="section-header">
+                <div className="section-indicator red"></div>
+                Invalid Test Cases
+              </h2>
+              <div className="test-grid">
+                {invalidTests.map(test => (
+                  <TestCard
+                    key={test.id}
+                    test={test}
+                    result={results[test.id]}
+                    onRun={() => runTest(test)}
+                    disabled={running || activeTest === test.id}
+                    getStatusIcon={getStatusIcon}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -337,31 +336,29 @@ function TestCard({ test, result, onRun, disabled, getStatusIcon }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="border border-slate-200 rounded-lg overflow-hidden hover:border-slate-300 transition-colors">
-      <div className="p-4 flex items-center justify-between bg-white">
-        <div className="flex items-center gap-4 flex-1">
-          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100 text-slate-600 text-sm font-medium">
-            {test.id}
-          </div>
-          <div className="flex-1">
-            <h3 className="font-medium text-slate-800">{test.name}</h3>
-            <p className="text-sm text-slate-500 mt-0.5">
+    <div className="test-card">
+      <div className="test-card-main">
+        <div className="test-card-content">
+          <div className="test-number">{test.id}</div>
+          <div className="test-info">
+            <h3 className="test-name">{test.name}</h3>
+            <p className="test-expected">
               Expect {test.expectedStatus} · {test.expectedCode}
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="test-actions">
             {result && getStatusIcon(result)}
             <button
               onClick={onRun}
               disabled={disabled}
-              className="px-4 py-1.5 text-sm border border-slate-300 text-slate-700 rounded hover:bg-slate-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-run"
             >
               Run
             </button>
             {result && (
               <button
                 onClick={() => setExpanded(!expanded)}
-                className="text-sm text-slate-500 hover:text-slate-700"
+                className="btn-details"
               >
                 {expanded ? 'Hide' : 'Details'}
               </button>
@@ -371,25 +368,25 @@ function TestCard({ test, result, onRun, disabled, getStatusIcon }) {
       </div>
       
       {expanded && result && (
-        <div className="border-t border-slate-200 bg-slate-50 p-4">
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-4 text-sm">
+        <div className="test-details">
+          <div className="details-content">
+            <div className="details-grid">
               <div>
-                <span className="text-slate-500">Status Code:</span>
-                <span className={`ml-2 font-mono ${result.statusCode === test.expectedStatus ? 'text-green-600' : 'text-red-600'}`}>
+                <span className="detail-label">Status Code:</span>
+                <span className={`detail-value ${result.statusCode === test.expectedStatus ? 'green' : 'red'}`}>
                   {result.statusCode}
                 </span>
               </div>
               <div>
-                <span className="text-slate-500">Response Code:</span>
-                <span className={`ml-2 font-mono ${result.response?.status_code === test.expectedCode ? 'text-green-600' : 'text-red-600'}`}>
+                <span className="detail-label">Response Code:</span>
+                <span className={`detail-value ${result.response?.status_code === test.expectedCode ? 'green' : 'red'}`}>
                   {result.response?.status_code || 'N/A'}
                 </span>
               </div>
             </div>
-            <div>
-              <span className="text-slate-500 text-sm block mb-2">Response:</span>
-              <pre className="bg-white border border-slate-200 rounded p-3 text-xs overflow-x-auto">
+            <div className="response-container">
+              <span className="response-label">Response:</span>
+              <pre className="response-pre">
                 {JSON.stringify(result.response, null, 2)}
               </pre>
             </div>
